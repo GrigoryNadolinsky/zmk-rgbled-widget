@@ -24,38 +24,11 @@ static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
     const struct device *dev = zmk_behavior_get_binding(binding->behavior_dev);
     const struct behavior_rgb_wdg_config *cfg = dev->config;
 
-
-
-
-// --- ПОДСВЕТКА УРОВНЯ ЗАРЯДА ТОЛЬКО НА ЦЕНТРАЛЬНОЙ ЧАСТИ (ДОНГЛЕ) ---
-// Этот блок вызывает функцию indicate_battery() только в том случае,
-// если устройство не является периферийной половиной (CONFIG_ZMK_SPLIT_ROLE_PERIPHERAL не определён).
-// Таким образом, при нажатии &ind_bat индикация заряда будет отображаться
-// только на донгле, и не будет активироваться на периферийных частях.
-
-#if IS_ENABLED(CONFIG_ZMK_BATTERY_REPORTING)
-#if !IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_PERIPHERAL)
-    if (cfg->indicate_battery) {
-        indicate_battery();
-    }
-#endif
-#endif
-
-// --- ПОДСВЕТКА УРОВНЯ ЗАРЯДА НА ПЕРИФЕРИЙНЫХ ПОЛОВИНКАХ ---
-// Ниже находится блок, который вызывает функцию indicate_battery()
-// на всех частях клавиатуры, включая периферийные половины (left/right).
-// Если этот блок оставить активным, то при нажатии &ind_bat
-// светодиод будет загораться также на периферии.
-// Мы закомментировали его, чтобы отключить подсветку батареи
-// на периферийных частях и оставить её только на донгле (central).
-
-/*
 #if IS_ENABLED(CONFIG_ZMK_BATTERY_REPORTING)
     if (cfg->indicate_battery) {
         indicate_battery();
     }
 #endif
-*/
 
 
 
@@ -87,7 +60,6 @@ static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
     }
 #endif
 */
-
 
 
 
