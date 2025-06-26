@@ -24,11 +24,48 @@ static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
     const struct device *dev = zmk_behavior_get_binding(binding->behavior_dev);
     const struct behavior_rgb_wdg_config *cfg = dev->config;
 
+
+
+
+// --- ПОДСВЕТКА УРОВНЯ ЗАРЯДА ТОЛЬКО НА ЦЕНТРАЛЬНОЙ ЧАСТИ (ДОНГЛЕ) ---
+// Этот блок вызывает функцию indicate_battery() только в том случае,
+// если устройство не является периферийной половиной (CONFIG_ZMK_SPLIT_ROLE_PERIPHERAL не определён).
+// Таким образом, при нажатии &ind_bat индикация заряда будет отображаться
+// только на донгле, и не будет активироваться на периферийных частях.
+
+#if IS_ENABLED(CONFIG_ZMK_BATTERY_REPORTING)
+#if !IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_PERIPHERAL)
+    if (cfg->indicate_battery) {
+        indicate_battery();
+    }
+#endif
+#endif
+
+// --- ПОДСВЕТКА УРОВНЯ ЗАРЯДА НА ПЕРИФЕРИЙНЫХ ПОЛОВИНКАХ ---
+// Ниже находится блок, который вызывает функцию indicate_battery()
+// на всех частях клавиатуры, включая периферийные половины (left/right).
+// Если этот блок оставить активным, то при нажатии &ind_bat
+// светодиод будет загораться также на периферии.
+// Мы закомментировали его, чтобы отключить подсветку батареи
+// на периферийных частях и оставить её только на донгле (central).
+
+/*
 #if IS_ENABLED(CONFIG_ZMK_BATTERY_REPORTING)
     if (cfg->indicate_battery) {
         indicate_battery();
     }
 #endif
+*/
+
+
+
+
+// --- ПОДСВЕТКА СТАТУСА BLE-СОЕДИНЕНИЯ ТОЛЬКО НА ПЕРИФЕРИЙНЫХ ПОЛОВИНАХ ---
+// Этот блок вызывает функцию indicate_connectivity() только в том случае,
+// если устройство НЕ является центральной частью (CONFIG_ZMK_SPLIT_ROLE_CENTRAL не определён).
+// Это позволяет отключить отображение статуса соединения на донгле при нажатии &ind_con,
+// сохраняя подсветку на периферийных половинках клавиатуры (left/right).
+
 #if IS_ENABLED(CONFIG_ZMK_BLE)
 #if !IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
     if (cfg->indicate_connectivity) {
@@ -36,6 +73,24 @@ static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
     }
 #endif
 #endif
+
+// --- ПОДСВЕТКА СТАТУСА BLE-СОЕДИНЕНИЯ НА ВСЕХ ЧАСТЯХ (ВКЛЮЧАЯ ДОНГЛ) ---
+// Этот блок вызывает функцию indicate_connectivity() на всех частях клавиатуры,
+// включая центральную часть (донгл). В результате при нажатии &ind_con
+// светодиод загорается как на периферийных половинках, так и на донгле.
+// Мы закомментировали его, чтобы отключить отображение BLE-состояния на донгле.
+
+/*
+#if IS_ENABLED(CONFIG_ZMK_BLE)
+    if (cfg->indicate_connectivity) {
+        indicate_connectivity();
+    }
+#endif
+*/
+
+
+
+
 #if !IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
     if (cfg->indicate_layer) {
         indicate_layer();
