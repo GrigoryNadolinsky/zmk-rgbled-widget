@@ -30,9 +30,11 @@ static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
     }
 #endif
 #if IS_ENABLED(CONFIG_ZMK_BLE)
+#if !IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
     if (cfg->indicate_connectivity) {
         indicate_connectivity();
     }
+#endif
 #endif
 #if !IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
     if (cfg->indicate_layer) {
