@@ -98,3 +98,29 @@ static const struct behavior_driver_api behavior_rgb_wdg_driver_api = {
                             &behavior_rgb_wdg_driver_api);
 
 DT_INST_FOREACH_STATUS_OKAY(RGBIND_INST)
+
+
+
+
+
+
+LOG_MODULE_DECLARE(rgbled_widget);
+
+static int behavior_rgbled_widget_init(const struct device *dev)
+{
+    const struct behavior_rgbled_widget_config *cfg = dev->config;
+#if IS_ENABLED(CONFIG_RGBLED_WIDGET_BATTERY_SHOW_ONLY_PERIPHERALS)
+    LOG_INF("Init: peripheral-only battery indication");
+    indicate_battery();
+#endif
+    return 0;
+}
+
+DEVICE_DT_INST_DEFINE(0,
+    behavior_rgbled_widget_init,    /* init-функция */
+    NULL,                           /* pm_control_fn */
+    NULL,                           /* data */
+    &behavior_rgbled_widget_cfg_0,  /* config */
+    POST_KERNEL,                    /* init level */
+    CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,
+    &behavior_rgbled_widget_api);
