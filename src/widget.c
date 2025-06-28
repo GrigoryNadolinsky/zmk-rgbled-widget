@@ -392,8 +392,8 @@ extern void led_init_thread(void *d0, void *d1, void *d2) {
 
 #if IS_ENABLED(CONFIG_ZMK_BLE)
     // check and indicate current profile or peripheral connectivity status
-    LOG_INF("Indicating initial connectivity status");
-    indicate_connectivity();
+    // LOG_INF("Indicating initial connectivity status");
+    // indicate_connectivity();
 #endif // IS_ENABLED(CONFIG_ZMK_BLE)
 
 #if SHOW_LAYER_COLORS
