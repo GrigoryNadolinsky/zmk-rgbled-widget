@@ -154,14 +154,14 @@ static int led_output_listener_cb(const zmk_event_t *eh) {
     return 0;
 }
 
-// ZMK_LISTENER(led_output_listener, led_output_listener_cb);
-// #if !IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+ZMK_LISTENER(led_output_listener, led_output_listener_cb);
+#if !IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
 // run led_output_listener_cb on BLE profile change (on central)
-// ZMK_SUBSCRIPTION(led_output_listener, zmk_ble_active_profile_changed);
-// #else
+ZMK_SUBSCRIPTION(led_output_listener, zmk_ble_active_profile_changed);
+#else
 // run led_output_listener_cb on peripheral status change event
-// ZMK_SUBSCRIPTION(led_output_listener, zmk_split_peripheral_status_changed);
-// #endif
+ZMK_SUBSCRIPTION(led_output_listener, zmk_split_peripheral_status_changed);
+#endif
 #endif // IS_ENABLED(CONFIG_ZMK_BLE)
 
 #if IS_ENABLED(CONFIG_ZMK_BATTERY_REPORTING)
